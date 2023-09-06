@@ -4,14 +4,19 @@
     <title>GqTakeHome</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
-    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
-
+    
+    <!-- Include the stylesheet for your application -->
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    
+    <!-- Include the JavaScript for your application -->
+
+
+    <!-- Add a link tag for your CSS from unpkg.com (e.g., Tailwind CSS) -->
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
   </head>
 
   <body>
     <%= yield %>
   </body>
 </html>
+
