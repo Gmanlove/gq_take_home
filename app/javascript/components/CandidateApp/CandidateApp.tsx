@@ -6,14 +6,38 @@ import { Redeem } from './Redeem';
 const CandidateApp = () => {
   const [redeemedCodes, setRedeemedCodes] = useState([]);
   const [currentCode, setCurrentCode] = useState('');
+  const [redeemedMessage, setRedeemedMessage] = useState('');
 
-  const handleRedeemCode = () => {
+  const handleRedeemCode = async () => {
     // Check if the code has already been redeemed
     if (!redeemedCodes.includes(currentCode)) {
-      // Mark the code as redeemed
-      setRedeemedCodes([...redeemedCodes, currentCode]);
+      try {
+        // Send a POST request to your Rails API to redeem the coupon code
+        const response = await fetch('/api/redeem', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', // Set your desired content type
+          },
+          body: JSON.stringify({ code: currentCode }), // Send the coupon code as JSON data
+        });
+
+        if (response.ok) {
+          // If the request is successful, mark the code as redeemed
+          setRedeemedCodes([...redeemedCodes, currentCode]);
+          setCurrentCode('');
+          setRedeemedMessage('Code redeemed successfully.');
+        } else {
+          // If there's an error, handle it accordingly
+          console.error('Failed to redeem code.');
+          setRedeemedMessage('Failed to redeem code.');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        setRedeemedMessage('An error occurred.');
+      }
+    } else {
+      setRedeemedMessage('Code already redeemed.');
     }
-    setCurrentCode('');
   };
 
   return (
@@ -25,7 +49,10 @@ const CandidateApp = () => {
         onChange={(e) => setCurrentCode(e.target.value)}
       />
       <button onClick={handleRedeemCode}>Redeem</button>
-      {redeemedCodes.includes(currentCode) && <p>Code already redeemed.</p>}
+      {redeemedMessage && <p>{redeemedMessage}</p>}
+      {couponIsRedeemed(currentCode) && (
+        <p className="redeemed-text">Code already redeemed.</p> // Apply different styles for redeemed code
+      )}
     </div>
   );
 };
